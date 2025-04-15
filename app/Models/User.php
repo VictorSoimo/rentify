@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'created_by',
     ];
 
     /**
@@ -44,5 +47,31 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function createdUsers(){
+        return $this->hasMany(User::class, 'created_by');
+    }
+
+    public function propertiesManaged(){
+        return $this->hasMany(Property::class, 'managed_by');
+
+    }
+
+    public function propertiesCaretaken(){
+        return $this->hasOne(Property::class, 'caretaker_id');
+
+    }
+    public function submitedRentCollections(){
+        return $this->hasMany(RentCollection::class, 'submitted_by');
+    }
+
+    public function submittedExpenses(){
+        return $this->hasMany(Expense::class, 'submitted_by');
+    }
+
+    public function approvedRequests(){
+        return $this->hasMany(ServiceRequest::class, 'approved_by');
+
     }
 }

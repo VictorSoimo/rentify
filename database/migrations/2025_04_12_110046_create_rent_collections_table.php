@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('rent_collections', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('unit_id')->constrained('units')->onDelete('restrict');
+            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('restrict');
+            $table->date('month')->index();
+            $table->foreignId('submitted_by')->constrained('users')->onDelete('restrict');
+            $table->string('amount_due');
+            $table->string('amount_paid');
+            $table->date('date_paid');
+            $table->enum('status', ['paid in full', 'partially paid', 'not paid']);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('rent_collections');
+    }
+
+   
+    
+};
